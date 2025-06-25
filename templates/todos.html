@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo</title>
+    <link rel="stylesheet" href="../static/css/todos.css">
+    <link rel="icon" href="https://i.ibb.co/HfGQgM0J/icon2.png" type="image/png">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="welcome">
+            <h1>Welcome, {{ username }}!</h2><a href="/logout">Logout</a>
+        </div>
+        <hr>
+        <br>
+        <form method="POST">
+            <input type="text" name="todo" placeholder="New task" required>
+            <button type="submit">Add</button>
+        </form>
+        <ul>
+            {% for todo in todos %}
+                <li>
+                    {{ todo["task"] }}
+                    <a id="delete" href="/delete/{{ todo['_id'] }}">❌</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <footer class="footer">
+        <p>&copy; A webapp using Flask by <a href="https://slimeydev.github.io/">Nesar Kubasada</a></p>
+        <p>Check out the source code on <a href="https://github.com/SlimeyDev/Todo-list-Flask">GitHub</a></p>
+    </footer>
+</body>
+</html>

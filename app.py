@@ -42,7 +42,7 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-
+        
         user = mongo.db.users.find_one({"username": username})
 
         if user and user["password"] == password:

@@ -24,6 +24,7 @@ a {
 h1 {
     text-align: center;
     color: white;
+    font-size: 50px;
 }
 
 button {
@@ -58,22 +59,44 @@ li {
     margin-top: 10px; 
     border-radius: 7px;
     display: flex;
+    align-items: center;
     justify-content: space-between;
+}
+
+.task-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.task-checkbox {
+    margin: 0;
+    width: 20px;
+    height: 20px;
+}
+
+.task-name {
+    word-break: break-word;
+    white-space: normal;
+    font-size: 20px;
+    transition: all 0.35s ease-in-out;
+}
+
+.task-buttons {
+    display: flex;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+.task-buttons {
+    display: flex;
+    gap: 5px;
 }
 
 ul {
     max-width: 60%;
     padding-left: 0;
-}
-
-#delete {
-    color: red;
-    text-decoration: none;
-    transition: scale 0.15s ease-in-out;
-}
-
-#delete:hover {
-    scale: 1.25;
 }
 
 .footer {
@@ -130,4 +153,35 @@ hr {
 
 .footer a:hover {
     text-decoration: underline;
+}
+
+img {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+}
+
+#delete {
+    color: red;
+    text-decoration: none;
+    transition: scale 0.15s ease-in-out;
+}
+
+#delete:hover {
+    scale: 1.25;
+}
+
+#edit {
+    color: red;
+    text-decoration: none;
+    transition: scale 0.15s ease-in-out;
+}
+
+#edit:hover {
+    scale: 1.25;
+}
+
+.task-checkbox:checked + .task-name {
+    text-decoration: line-through;
+    opacity: 0.6;
 }

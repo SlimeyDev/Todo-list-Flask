@@ -54,19 +54,30 @@ def login():
 
     return render_template("login.html")
 
-@app.route("/todos", methods=["GET", "POST"])
+@app.route("/todos", methods=["GET"])
 def todos():
     if "username" not in session:
         return redirect(url_for("login"))
-    user = mongo.db.users.find_one({"username": session["username"]})
 
-    if request.method == "POST":
-        todo = request.form["todo"]
-        if todo.strip() != "":
-            mongo.db.todos.insert_one({"user_id": user["_id"], "task": todo})
+    username = session["username"]
+    todos = mongo.db.todos.find({"username": username})
+    return render_template("todos.html", todos=todos, username=username)
 
-    user_todos = list(mongo.db.todos.find({"user_id": user["_id"]}))
-    return render_template("todos.html", todos=user_todos, username=user["username"])
+@app.route("/add", methods=["POST"])
+def add_task():
+    if "username" not in session:
+        return redirect(url_for("login"))
+        
+    username = session["username"]
+    task = request.form["task"]
+
+    mongo.db.todos.insert_one({
+        "username": username,
+        "task": task,
+        "completed": False
+    })
+
+    return redirect(url_for("todos"))
 
 @app.route("/logout")
 def logout():
@@ -78,9 +89,20 @@ def delete(id):
     if "username" not in session:
         return redirect(url_for("login"))
 
-    user = mongo.db.users.find_one({"username": session["username"]})
-    mongo.db.todos.delete_one({"_id": ObjectId(id), "user_id": user["_id"]})
+    mongo.db.todos.delete_one({"_id": ObjectId(id), "username": session["username"]})
+    return redirect(url_for("todos"))
+
+@app.route("/toggle/<id>", methods=["POST"])
+def toggle_complete(id):
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    completed = "completed" in request.form
+    mongo.db.todos.update_one(
+        {"_id": ObjectId(id), "username": session["username"]},
+        {"$set": {"completed": completed}}
+    )
     return redirect(url_for("todos"))
 
 if __name__ == "__main__":
-    app.run(debug=False, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5000)

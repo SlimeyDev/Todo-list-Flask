@@ -14,18 +14,26 @@
         </div>
         <hr>
         <br>
-        <form method="POST">
-            <input type="text" name="todo" placeholder="New task" required>
+        <form method="POST" action="/add">
+            <input type="text" name="task" placeholder="New task" required>
             <button type="submit">Add</button>
         </form>
         <ul>
             {% for todo in todos %}
                 <li>
-                    {{ todo["task"] }}
-                    <a id="delete" href="/delete/{{ todo['_id'] }}">❌</a>
+                    <div class="task-left">
+                        <form method="POST" action="/toggle/{{ todo['_id'] }}" style="display:inline;">
+                            <input type="checkbox" class="task-checkbox" name="completed" value="true" onchange="this.form.submit()" {% if todo['completed'] %}checked{% endif %}>
+                            <span class="task-name">{{ todo["task"] }}</span>
+                        </form>
+                    </div>
+                    <div class="task-buttons">
+                        <a id="edit" href="/edit/{{ todo['_id'] }}"><img src="https://i.ibb.co/GvWWRV6X/edit-icon.png" alt="edit"></a>
+                        <a id="delete" href="/delete/{{ todo['_id'] }}"><img src="https://i.ibb.co/whwhKbG3/delete-icon.png" alt="delete"></a>
+                    </div>
                 </li>
             {% endfor %}
-        </ul>
+        </ul>             
     </div>
     <footer class="footer">
         <p>&copy; A webapp using Flask by <a href="https://slimeydev.github.io/">Nesar Kubasada</a></p>

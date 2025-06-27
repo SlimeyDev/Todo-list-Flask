@@ -106,6 +106,9 @@ def toggle_complete(id):
         {"_id": ObjectId(id), "username": session["username"]},
         {"$set": {"completed": completed}}
     )
+    list_name = request.form.get("list")
+    if list_name:
+        return redirect(url_for("todos", list=list_name))
     return redirect(url_for("todos"))
 
 @app.route("/new_list", methods=["POST"])

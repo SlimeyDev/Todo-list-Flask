@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo</title>
+    <title>Home</title>
     <link rel="stylesheet" href="../static/css/todos.css">
     <link rel="icon" href="https://i.ibb.co/HfGQgM0J/icon2.png" type="image/png">
 </head>
@@ -48,6 +48,7 @@
                     <li>
                         <div class="task-left">
                             <form method="POST" action="/toggle/{{ todo['_id'] }}" style="display:inline;">
+                                <input type="hidden" name="list" value="{{ selected_list }}">
                                 <input type="checkbox" class="task-checkbox" name="completed" value="true" onchange="this.form.submit()" {% if todo['completed'] %}checked{% endif %}>
                                 <span class="task-name">{{ todo["task"] }}</span>
                             </form>

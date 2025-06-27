@@ -188,16 +188,16 @@ img {
 
 .main-container {
     display: flex;
-    height: 100vh; /* or whatever fits your layout */
+    height: 100vh;
 }
 
 .your-lists {
-    width: 350px; /* adjust as needed */
+    width: 350px;
     padding: 10px;
 }
 
 #listbtn {
-    width: 250px;   /* or adjust as needed */
+    width: 250px;
     text-align: left;
 }
 
@@ -210,7 +210,6 @@ img {
 .tasks-content {
     flex: 1;
     padding: 20px;
-    /* other styles */
 }
 
 .list-row {

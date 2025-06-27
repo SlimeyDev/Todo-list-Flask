@@ -33,6 +33,8 @@ def register():
             return redirect(url_for("register"))
 
         mongo.db.users.insert_one({"username": username, "password": password})
+        # Create default list for new user
+        mongo.db.lists.insert_one({"username": username, "list_name": "Your list"})
         return redirect(url_for("login"))
         
     return render_template("register.html")
@@ -58,26 +60,28 @@ def login():
 def todos():
     if "username" not in session:
         return redirect(url_for("login"))
-
     username = session["username"]
-    todos = mongo.db.todos.find({"username": username})
-    return render_template("todos.html", todos=todos, username=username)
+    lists = list(mongo.db.lists.find({"username": username}))
+    selected_list = request.args.get("list")
+    if not selected_list and lists:
+        selected_list = lists[0]["list_name"]
+    todos = mongo.db.todos.find({"username": username, "list_name": selected_list}) if selected_list else []
+    return render_template("todos.html", todos=todos, username=username, lists=lists, selected_list=selected_list)
 
 @app.route("/add", methods=["POST"])
 def add_task():
     if "username" not in session:
         return redirect(url_for("login"))
-        
     username = session["username"]
     task = request.form["task"]
-
+    list_name = request.form["list_name"]
     mongo.db.todos.insert_one({
         "username": username,
         "task": task,
-        "completed": False
+        "completed": False,
+        "list_name": list_name
     })
-
-    return redirect(url_for("todos"))
+    return redirect(url_for("todos", list=list_name))
 
 @app.route("/logout")
 def logout():
@@ -102,6 +106,26 @@ def toggle_complete(id):
         {"_id": ObjectId(id), "username": session["username"]},
         {"$set": {"completed": completed}}
     )
+    return redirect(url_for("todos"))
+
+@app.route("/new_list", methods=["POST"])
+def new_list():
+    if "username" not in session:
+        return redirect(url_for("login"))
+    username = session["username"]
+    list_name = request.form["list_name"]
+    existing = mongo.db.lists.find_one({"username": username, "list_name": list_name})
+    if not existing:
+        mongo.db.lists.insert_one({"username": username, "list_name": list_name})
+    return redirect(url_for("todos", list=list_name))
+
+@app.route("/delete_list/<list_name>", methods=["POST"])
+def delete_list(list_name):
+    if "username" not in session:
+        return redirect(url_for("login"))
+    username = session["username"]
+    mongo.db.lists.delete_one({"username": username, "list_name": list_name})
+    mongo.db.todos.delete_many({"username": username, "list_name": list_name})
     return redirect(url_for("todos"))
 
 if __name__ == "__main__":

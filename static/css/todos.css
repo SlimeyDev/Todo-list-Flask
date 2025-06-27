@@ -30,7 +30,7 @@ h1 {
 button {
     border: 2px solid black;
     border-radius: 10px;
-    height: 2rem;
+    height: 35px;
     width: 100px;
     font-size: 20px;
     cursor: pointer;
@@ -184,4 +184,43 @@ img {
 .task-checkbox:checked + .task-name {
     text-decoration: line-through;
     opacity: 0.6;
+}
+
+.main-container {
+    display: flex;
+    height: 100vh; /* or whatever fits your layout */
+}
+
+.your-lists {
+    width: 350px; /* adjust as needed */
+    padding: 10px;
+}
+
+#listbtn {
+    width: 250px;   /* or adjust as needed */
+    text-align: left;
+}
+
+.vertical-divider {
+    width: 5px;
+    background: white;
+    height: 100%;
+}
+
+.tasks-content {
+    flex: 1;
+    padding: 20px;
+    /* other styles */
+}
+
+.list-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.list-row form {
+    margin: 0;
+    padding: 0;
 }

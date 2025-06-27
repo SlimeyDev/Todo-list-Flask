@@ -8,32 +8,57 @@
     <link rel="icon" href="https://i.ibb.co/HfGQgM0J/icon2.png" type="image/png">
 </head>
 <body>
-    <div class="wrapper">
-        <div class="welcome">
-            <h1>Welcome, {{ username }}!</h2><a href="/logout">Logout</a>
-        </div>
-        <hr>
-        <br>
-        <form method="POST" action="/add">
-            <input type="text" name="task" placeholder="New task" required>
-            <button type="submit">Add</button>
-        </form>
-        <ul>
-            {% for todo in todos %}
-                <li>
-                    <div class="task-left">
-                        <form method="POST" action="/toggle/{{ todo['_id'] }}" style="display:inline;">
-                            <input type="checkbox" class="task-checkbox" name="completed" value="true" onchange="this.form.submit()" {% if todo['completed'] %}checked{% endif %}>
-                            <span class="task-name">{{ todo["task"] }}</span>
+    <div class="welcome">
+        <h1>Welcome, {{ username }}!</h1><a href="/logout">Logout</a>
+    </div>
+    <hr>
+    <br>
+    <div class="main-container">
+        <div class="your-lists">
+            <h2>Your Lists</h2>
+            <form method="POST" action="/new_list">
+                <input type="text" name="list_name" required maxlength="20"><button type="submit">Create</button>
+            </form>
+            <br>
+            <div class="lists">
+                {% for l in lists %}
+                    <div class="list-row">
+                        <form method="GET" action="/todos" style="flex:1;">
+                            <input type="hidden" name="list" value="{{ l['list_name'] }}">
+                            <button type="submit" id="listbtn" {% if selected_list == l['list_name'] %}style="font-weight:bold;"{% endif %}>{{ l["list_name"] }}</button>
+                        </form>
+                        <form method="POST" action="/delete_list/{{ l['list_name'] }}">
+                            <button type="submit" id="delete" style="background:none; border:none; padding:0;">
+                                <img src="https://i.ibb.co/whwhKbG3/delete-icon.png" alt="delete">
+                            </button>
                         </form>
                     </div>
-                    <div class="task-buttons">
-                        <a id="edit" href="/edit/{{ todo['_id'] }}"><img src="https://i.ibb.co/GvWWRV6X/edit-icon.png" alt="edit"></a>
-                        <a id="delete" href="/delete/{{ todo['_id'] }}"><img src="https://i.ibb.co/whwhKbG3/delete-icon.png" alt="delete"></a>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>             
+                {% endfor %}
+            </div>
+        </div>
+        <div class="vertical-divider"></div>
+        <div class="tasks-content">
+            <form method="POST" action="/add">
+                <input type="hidden" name="list_name" value="{{ selected_list }}">
+                <input type="text" name="task" placeholder="New task" required>
+                <button type="submit">Add</button>
+            </form>
+            <ul>
+                {% for todo in todos %}
+                    <li>
+                        <div class="task-left">
+                            <form method="POST" action="/toggle/{{ todo['_id'] }}" style="display:inline;">
+                                <input type="checkbox" class="task-checkbox" name="completed" value="true" onchange="this.form.submit()" {% if todo['completed'] %}checked{% endif %}>
+                                <span class="task-name">{{ todo["task"] }}</span>
+                            </form>
+                        </div>
+                        <div class="task-buttons">
+                            <a id="delete" href="/delete/{{ todo['_id'] }}"><img src="https://i.ibb.co/whwhKbG3/delete-icon.png" alt="delete"></a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
     <footer class="footer">
         <p>&copy; A webapp using Flask by <a href="https://slimeydev.github.io/">Nesar Kubasada</a></p>
